@@ -1,0 +1,11 @@
+gnews
+langchain_groq
+matplotlib
+pandas
+pandasai
+Plost
+pymongo
+Requests
+st_btn_group
+streamlit
+streamlit_feedback
