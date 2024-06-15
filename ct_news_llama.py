@@ -222,7 +222,7 @@ if st.session_state.CONNECTED:
         st.info('Login to use GenAI to get answers', icon="👤")
         chat_disable=True        
         
-    df = update_df(st.session_state.text))
+    df = update_df(st.session_state.text)
 
      #Heading for sidebar
     st.sidebar.header('CT Dashboard `v0.2`')
