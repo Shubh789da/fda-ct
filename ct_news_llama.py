@@ -228,7 +228,7 @@ if st.session_state.CONNECTED:
         st.container()
 
     with c2:
-        st.markdown('### Top 5 sponsors')
+        st.markdown('####Top 5 sponsors')
         sponsors=filtered_df['LeadSponsorName'].apply(lambda x: x[0]).to_frame()
         # Group by 'LeadSponsorName' and count the occurrences
         sponsor_counts = sponsors['LeadSponsorName'].value_counts().reset_index()
@@ -244,7 +244,7 @@ if st.session_state.CONNECTED:
 
 
     with c3:
-        st.markdown('### Top 5 Interventions')
+        st.markdown('#### Top 5 Interventions')
         # Explode the list column to separate rows
         df_exploded = filtered_df.explode('ArmGroupInterventionName')
         
@@ -256,12 +256,20 @@ if st.session_state.CONNECTED:
                 
         # Count intervention names
         intervention_counts = df_exploded['InterventionName'].value_counts()
-        
+
+ 
         # Get the top 5 intervention names
         top_5_interventions = intervention_counts.nlargest(5)
+       
+        # Convert Series to DataFrame
+        top_5_interventions_df = top_5_interventions.reset_index()
+        
+        # Rename columns
+        top_5_interventions_df = top_5_interventions_df.rename(columns={'index': 'Interventions', 'InterventionName': 'Count'})
+       
 
         # Print the top 5 interventions
-        st.table(top_5_interventions)
+        st.table(top_5_interventions_df)
 
     dataExploration = st.container()
 
