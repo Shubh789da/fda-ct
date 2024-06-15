@@ -20,14 +20,96 @@ from pymongo.server_api import ServerApi
 import matplotlib.pyplot as plt
 from st_btn_group import st_btn_group
 from streamlit_feedback import streamlit_feedback
+import yaml
+from yaml.loader import SafeLoader
+import streamlit_authenticator as stauth
+from streamlit_authenticator.utilities.exceptions import (CredentialsError,
+                                                          ForgotError,
+                                                          LoginError,
+                                                          RegisterError,
+                                                          ResetError,
+                                                          UpdateError) 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 st.title('CT Analysis')
 
+# Loading config file
+with open('config.yaml', 'r', encoding='utf-8') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+# Creating the authenticator object
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
+
 #Setup mongoDB authentication
 uri_mdb = "mongodb+srv://postlytllp:HGlyKh6SQfpqlejf@postlyt-test.l88dp2e.mongodb.net/?retryWrites=true&w=majority&appName=postlyt-test"
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
+
+#login function
+@st.experimental_dialog("Login")
+def show_authentication_ui():
+    tab1,tab2,tab3,tab4= st.tabs(["Login","Register","Forgot Password","Update Details"])
+    with tab1:
+        # Creating a login widget
+        try:
+            authenticator.login()
+        except LoginError as e:
+            st.error(e)
+        
+        if st.session_state["authentication_status"]:
+            # authenticator.logout()
+            # st.write(f'Welcome *{st.session_state["name"]}*')
+            st.experimental_rerun() 
+            # st.title('Some content')
+        elif st.session_state["authentication_status"] is False:
+            st.error('Username/password is incorrect')
+        elif st.session_state["authentication_status"] is None:
+            st.warning('Please Login to use GenAI for datanalysis')
+
+    with tab2:
+        # # Creating a new user registration widget
+        try:
+            (email_of_registered_user,
+                username_of_registered_user,
+                name_of_registered_user) = authenticator.register_user(pre_authorization=False)
+            if email_of_registered_user:
+                st.success('User registered successfully')
+        except RegisterError as e:
+            st.error(e)
+    
+    
+    with tab3:    
+        # # Creating a forgot password widget
+        try:
+            (username_of_forgotten_password,
+                email_of_forgotten_password,
+                new_random_password) = authenticator.forgot_password()
+            if username_of_forgotten_password:
+                st.success('New password sent securely')
+                # Random password to be transferred to the user securely
+            elif not username_of_forgotten_password:
+                st.error('Username not found')
+        except ForgotError as e:
+            st.error(e)
+
+    with tab4:
+        # # Creating an update user details widget
+        if st.session_state["authentication_status"]:
+            try:
+                if authenticator.update_user_details(st.session_state["username"]):
+                    st.success('Entries updated successfully')
+            except UpdateError as e:
+                st.error(e)
+    
+    # Saving config file
+    with open('config.yaml', 'w', encoding='utf-8') as file:
+        yaml.dump(config, file, default_flow_style=False)
 
 def clear_submit():
     """
@@ -125,22 +207,25 @@ def display_db_connection_menu():
 
 display_db_connection_menu()
 
+global chat_disable
+
 if st.session_state.CONNECTED:
 
-    # key_path = "test-gemini-420318-e15da8ebca2c.json"
-    # prompt='''
-    #     1.You are a Named Entity Recognition for questions on clinical trials.
-    #     2.Do some analysis to extract the Entity from the text for some categories, i.e.,Phase, Disease AND Drug Name, Sponsors, Country, Year, Completion Year,
-    #     Recruitment Status,
-    #     3.Output Phase category as PHASE, Disease and Drug Name Category as COND, Sponsors category as ORG, Country category as LOC, Completion Year category as YEAR, and  Recruitment Status category as REC_ST.
-    #     4.Return this result as JSON for each entity with character offset from each result.
-    #     Analyze the question as follow: "'
-    #     '''
     st.write('You are Searching for:',  st.session_state.text)
-    df = update_df(st.session_state.text)
+    if st.session_state["authentication_status"]:
+        st.sidebar.write(f'Welcome *{st.session_state["name"]}*')
+        chat_disable=False
+        with st.sidebar:
+            authenticator.logout()
+    else:
+        st.sidebar.button("Login", type="primary",on_click=show_authentication_ui())
+        st.info('Login to use GenAI to get answers', icon="👤")
+        chat_disable=True        
+        
+    df = update_df(st.session_state.text))
 
      #Heading for sidebar
-    st.sidebar.header('CT Dashboard `version 0.1`')
+    st.sidebar.header('CT Dashboard `v0.2`')
 
     #selecting the study type
     df['StudyType_str']=df.loc[:,'StudyType'].apply( lambda x: 'N/A' if len(x)==0 else ' '.join(map(str,x)))
@@ -319,7 +404,8 @@ if st.session_state.CONNECTED:
             {
                 "$set": {
                     "score": feedback['score'],
-                    "Comment": feedback['text']
+                    "Comment": feedback['text'],
+                    "User": st.session_state["name"]
                 }
             }
         )
@@ -420,7 +506,7 @@ if st.session_state.CONNECTED:
                 )
                 
     
-        if prompt := st.chat_input(placeholder="What is this data about?"):
+        if prompt := st.chat_input(placeholder="What is this data about?",disabled= chat_disable):
     
             # Create a new feedback entry
             # st.session_state.messages.append({"role": "user", "content": prompt})
