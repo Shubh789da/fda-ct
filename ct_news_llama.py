@@ -41,7 +41,7 @@ def update_df(COND):
     base_url = "https://clinicaltrials.gov/api/query/study_fields?"
     params = {
         "expr": str(COND),  # Use st.session_state.text_input here
-        "fields": "NCTId,Condition,BriefTitle,Phase,LeadSponsorName,OverallStatus,StartDate,StartDateType,CompletionDate,CompletionDateType,"
+        "fields": "NCTId,Condition,BriefTitle,ArmGroupInterventionName,Phase,LeadSponsorName,OverallStatus,StartDate,StartDateType,CompletionDate,CompletionDateType,"
                   "StudyType,LocationFacility,LocationCity,LocationState,LocationZip,LocationCountry,LocationStatus",
         "min_rnk": "1",
         "max_rnk": "1000",
