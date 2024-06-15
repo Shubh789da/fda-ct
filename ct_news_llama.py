@@ -265,7 +265,7 @@ if st.session_state.CONNECTED:
         top_5_interventions_df = top_5_interventions.reset_index()
         
         # Rename columns
-        top_5_interventions_df = top_5_interventions_df.rename(columns={'index': 'Interventions', 'InterventionName': 'Count'})
+        top_5_interventions_df = top_5_interventions_df.rename(columns=[['Interventions', 'Count']])
        
 
         # Print the top 5 interventions
