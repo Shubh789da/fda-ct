@@ -330,7 +330,7 @@ if st.session_state.CONNECTED:
 
 
         pai.clear_cache()
-        llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
         df_smart = SmartDataframe(df_1, config={'llm': llm})
     
         
