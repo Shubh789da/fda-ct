@@ -228,7 +228,7 @@ if st.session_state.CONNECTED:
         st.container()
 
     with c2:
-        st.markdown('####Top 5 sponsors')
+        st.markdown('##### Top 5 sponsors')
         sponsors=filtered_df['LeadSponsorName'].apply(lambda x: x[0]).to_frame()
         # Group by 'LeadSponsorName' and count the occurrences
         sponsor_counts = sponsors['LeadSponsorName'].value_counts().reset_index()
@@ -244,7 +244,7 @@ if st.session_state.CONNECTED:
 
 
     with c3:
-        st.markdown('#### Top 5 Interventions')
+        st.markdown('##### Top 5 Interventions')
         # Explode the list column to separate rows
         df_exploded = filtered_df.explode('ArmGroupInterventionName')
         
