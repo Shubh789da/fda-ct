@@ -96,6 +96,11 @@ def update_df(COND):
 
     return df
 
+def extract_info(intervention_str):
+    parts = intervention_str.split(": ")
+    intervention_type = parts[0]  # Get the first part (e.g., "Biological")
+    intervention_name = ": ".join(parts[1:])  # Join the rest (e.g., "Experimental : Secukinumab low dose")
+    return [intervention_type, intervention_name]
 
 if  'text' not in st.session_state:
     st.session_state.CONNECTED =  False
@@ -217,9 +222,12 @@ if st.session_state.CONNECTED:
     col3.metric("Trials completed", completion_count)
 
     #row B
-    c1,c2,c3=st.columns((3,3,4))
+    c1,c2,c3,c4=st.columns((1,4,4,1))
 
     with c1:
+        st.container()
+
+    with c2:
         st.markdown('### Top 5 sponsors')
         sponsors=filtered_df['LeadSponsorName'].apply(lambda x: x[0]).to_frame()
         # Group by 'LeadSponsorName' and count the occurrences
@@ -235,14 +243,25 @@ if st.session_state.CONNECTED:
         filtered_pie = filtered_df_pie[filtered_df_pie['Phase_str'].isin(selected_options)]
 
 
-    with c2:
-        st.markdown('### Phase distribution')
-        plost.donut_chart(
-            data=filtered_pie,
-            theta='count_phase',
-            color='Phase_str',
-            legend=None,
-            use_container_width=True)
+    with c3:
+        st.markdown('### Top 5 Interventions')
+        # Explode the list column to separate rows
+        df_exploded = filtered_df.explode('ArmGroupInterventionName')
+        
+        # Split the intervention name and type
+        df_exploded.dropna(subset=['ArmGroupInterventionName'], inplace=True)
+        
+        # Apply the function to extract information
+        df_exploded[['InterventionType', 'InterventionName']] = df_exploded['ArmGroupInterventionName'].apply(extract_info).tolist()
+                
+        # Count intervention names
+        intervention_counts = df_exploded['InterventionName'].value_counts()
+        
+        # Get the top 5 intervention names
+        top_5_interventions = intervention_counts.nlargest(5)
+
+        # Print the top 5 interventions
+        st.table(top_5_interventions)
 
     dataExploration = st.container()
 
