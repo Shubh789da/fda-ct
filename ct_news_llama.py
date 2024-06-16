@@ -218,7 +218,7 @@ if st.session_state.CONNECTED:
         with st.sidebar:
             authenticator.logout()
     else:
-        if st.sidebar.button("Login", type="primary"):
+        if st.sidebar.button("Login"):
           show_authentication_ui()
         else:
           pass
