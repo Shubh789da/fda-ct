@@ -218,7 +218,8 @@ if st.session_state.CONNECTED:
         with st.sidebar:
             authenticator.logout()
     else:
-        st.sidebar.button("Login", type="primary",on_click=show_authentication_ui())
+        st.sidebar.button("Login", type="primary"):
+          show_authentication_ui())
         st.info('Login to use GenAI to get answers', icon="👤")
         chat_disable=True        
         
