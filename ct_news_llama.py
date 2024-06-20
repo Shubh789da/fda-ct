@@ -516,7 +516,7 @@ if st.session_state.CONNECTED:
     
             with st.chat_message("assistant"):
                 response = df_smart.chat(prompt)
-                st.markdown(response)
+                st.write(response)
                 
     
                 # to show chart
