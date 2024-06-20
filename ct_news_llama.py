@@ -35,7 +35,7 @@ st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 st.title('CT Analysis')
 
 # Loading config file
-with open('/config.yaml', 'r', encoding='utf-8') as file:
+with open('config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 # Creating the authenticator object
