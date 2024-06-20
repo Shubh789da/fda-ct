@@ -108,7 +108,7 @@ def show_authentication_ui():
                 st.error(e)
     
     # Saving config file
-    with open('/config.yaml', 'w', encoding='utf-8') as file:
+    with open('config.yaml', 'w', encoding='utf-8') as file:
         yaml.dump(config, file, default_flow_style=False)
 
 def clear_submit():
@@ -482,6 +482,7 @@ if st.session_state.CONNECTED:
                             # Use the potentially converted answer from session state
                             "prompt": st.session_state.feedbacks[feedback_key]['prompt'],  
                             "answer": st.session_state.feedbacks[feedback_key]['answer'],
+                            "User": st.session_state["name"],
                             "score": None,
                             "Comment": None 
                         })
@@ -493,6 +494,7 @@ if st.session_state.CONNECTED:
                             "condition": st.session_state.get('text', ''),
                             "prompt": st.session_state.feedbacks[feedback_key]['prompt'], 
                             "answer": f"Error: {e}",
+                            "User": st.session_state["name"],
                             "score": None,
                             "Comment": None 
                         })
