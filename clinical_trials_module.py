@@ -56,7 +56,7 @@ def get_clinical_trials_data(COND):
         flat_data['studyFirstSubmitDate'] = status.get('studyFirstSubmitDate')
         flat_data['studyFirstPostDate'] = status.get('studyFirstPostDateStruct', {}).get('date')
         flat_data['lastUpdatePostDate'] = status.get('lastUpdatePostDateStruct', {}).get('date')
-        flat_data['completionDate'] = status.get('lastUpdatePostDateStruct', {}).get('type')
+        flat_data['lastUpdatePostDateType'] = status.get('lastUpdatePostDateStruct', {}).get('type')
 
         #Results status
         flat_data['HasResults'] = study.get('hasResults')
@@ -128,8 +128,31 @@ def get_clinical_trials_data(COND):
 
     # Convert to DataFrame
     df = pd.DataFrame(normalized_data)
+
+    def parse_date(date_str):
+        if pd.isna(date_str):
+            return pd.NaT
+        if isinstance(date_str, list):
+            date_str = date_str[0] if date_str else None
+        if not date_str:
+            return pd.NaT
+        try:
+            # Parse the date, set day to 1 if only year and month are provided
+            parsed_date = parse(date_str, default=parse('2000-01-01'))
+            if len(date_str) <= 7:  # If only year or year-month is provided
+                return parsed_date.replace(day=1)
+            return parsed_date
+        except ParserError:
+            return pd.NaT
+
+    # Convert date columns
+    date_columns = ['startDate', 'completionDate', 'studyFirstSubmitDate', 'studyFirstPostDate', 'lastUpdatePostDate']
+    
+    for col in date_columns:
+        df[col] = df[col].apply(parse_date)
     
     return df
+    
 
 # Example usage:
 # df = get_clinical_trials_data("Novartis")
