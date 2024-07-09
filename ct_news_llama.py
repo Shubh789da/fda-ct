@@ -262,9 +262,9 @@ if st.session_state.CONNECTED:
 
     #Nos. of completed studies
     completion_count = (
-    filtered_df['nctId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
+    filtered_df['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['Actual'])].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['nctId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
+    else filtered_df_lc_pie['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['Actual'])].count()
     )
     col3.metric("Trials completed", completion_count)
 
