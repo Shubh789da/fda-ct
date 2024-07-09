@@ -29,6 +29,7 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           RegisterError,
                                                           ResetError,
                                                           UpdateError) 
+from clinical_trials_module import get_clinical_trials_data
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -119,64 +120,26 @@ def clear_submit():
     """
     st.session_state["submit"] = False
 
-def update_df(COND):
-    base_url = "https://clinicaltrials.gov/api/query/study_fields?"
-    params = {
-        "expr": str(COND),  # Use st.session_state.text_input here
-        "fields": "NCTId,Condition,BriefTitle,ArmGroupInterventionName,Phase,LeadSponsorName,OverallStatus,StartDate,StartDateType,CompletionDate,CompletionDateType,"
-                  "StudyType,LocationFacility,LocationCity,LocationState,LocationZip,LocationCountry,LocationStatus",
-        "min_rnk": "1",
-        "max_rnk": "1000",
-        "fmt": "json"
-    }
 
-    all_studies = []
+    # df=load_data(base_url,params)
 
-    @st.cache_data
-    def load_data(base_url,params):
+    # # Convert the object to date and time
+    # df["CompletionDate"]=df["CompletionDate"].apply(
+    #     lambda x :pd.to_datetime(
+    #         x[0]) if isinstance(
+    #         x, list) and len(
+    #         x) > 0 else pd.NaT )
 
-        while True:
-            response = requests.get(base_url, params=params)
-            if response.status_code == 200:
-                data = response.json()
-                studies = data["StudyFieldsResponse"]["StudyFields"]
-                all_studies.extend(studies)
+    # df["StartDate"]=df["StartDate"].apply(
+    #     lambda x :pd.to_datetime(
+    #         x[0]) if isinstance(
+    #         x, list) and len(
+    #         x) > 0 else pd.NaT )
 
-                # Check if there are more studies beyond the current range
-                if int(data["StudyFieldsResponse"]["NStudiesFound"]) > int(params["max_rnk"]):
-                    min_rank = int(params["max_rnk"]) + 1
-                    max_rank = min_rank + 999
-                    params["min_rnk"] = str(min_rank)
-                    params["max_rnk"] = str(max_rank)
-                else:
-                    break  # No more studies, exit the loop
-            else:
-                print(f"Error: {response.status_code}")
-                break
+    # # Counting the number of trials going on
+    # df["Nos_location"]=df["LocationCountry"].apply(lambda x: len(x) if isinstance(x,list) else 0)
 
-        # Create a DataFrame from the retrieved studies
-        df = pd.DataFrame(all_studies)
-        return df
-
-    df=load_data(base_url,params)
-
-    # Convert the object to date and time
-    df["CompletionDate"]=df["CompletionDate"].apply(
-        lambda x :pd.to_datetime(
-            x[0]) if isinstance(
-            x, list) and len(
-            x) > 0 else pd.NaT )
-
-    df["StartDate"]=df["StartDate"].apply(
-        lambda x :pd.to_datetime(
-            x[0]) if isinstance(
-            x, list) and len(
-            x) > 0 else pd.NaT )
-
-    # Counting the number of trials going on
-    df["Nos_location"]=df["LocationCountry"].apply(lambda x: len(x) if isinstance(x,list) else 0)
-
-    return df
+    # return df
 
 def extract_info(intervention_str):
     parts = intervention_str.split(": ")
@@ -204,7 +167,6 @@ def display_db_connection_menu():
 
 
 
-
 display_db_connection_menu()
 
 global chat_disable
@@ -222,13 +184,13 @@ if st.session_state.CONNECTED:
         st.info('Login to use GenAI to get answers', icon="👤")
         chat_disable=True        
         
-    df = update_df(st.session_state.text)
+    df = get_clinical_trials_data(st.session_state.text)
 
      #Heading for sidebar
-    st.sidebar.header('CT Dashboard `v0.2`')
+    st.sidebar.header('CT Dashboard `v0.3`')
 
     #selecting the study type
-    df['StudyType_str']=df.loc[:,'StudyType'].apply( lambda x: 'N/A' if len(x)==0 else ' '.join(map(str,x)))
+    df['StudyType_str']=df.loc[:,'studyType'].apply( lambda x: 'N/A' if len(x)==0 else ' '.join(map(str,x)))
     options_st = df['StudyType_str'].unique().tolist()
     options_st.insert(0, "All")
     selected_options_str = st.sidebar.selectbox('What kind of study you want?',options= options_st)
@@ -246,20 +208,20 @@ if st.session_state.CONNECTED:
 
     # Slider for selecting year and month
     st.sidebar.subheader('Start Year of CT')
-    years = filtered_df['StartDate'].dt.year.unique()
+    years = filtered_df['startDate'].dt.year.unique()
     selected_year_range = st.sidebar.slider('Select Year Range', min_value=int(min(years)), max_value=int(max(years)), value=(int(min(years)), int(max(years))), key='slider_year')
 
 
     # Filter the DataFrame based on the selected dates
-    filtered_df = filtered_df[(filtered_df['StartDate'].dt.year >= selected_year_range[0]) & (filtered_df['StartDate'].dt.year <= selected_year_range[1])]
-    # filtered_df['StartDate'] = filtered_df['StartDate'].dt.strftime('%Y-%m')
-    filtered_df['Phase']=filtered_df['Phase'].fillna('N/A')
+    filtered_df = filtered_df[(filtered_df['startDate'].dt.year >= selected_year_range[0]) & (filtered_df['startDate'].dt.year <= selected_year_range[1])]
+    # filtered_df['startDate'] = filtered_df['startDate'].dt.strftime('%Y-%m')
+    filtered_df['phases']=filtered_df['phases'].fillna('N/A')
 
 
 
     #Data for pie chart
-    filtered_df.loc[:,'Phase_str'] = filtered_df.loc[:,'Phase'].apply(lambda x: 'N/A' if len(x) == 0 else ' '.join(map(str, x)))
-    filtered_df_pie=filtered_df.groupby("Phase_str")['NCTId'].count().rename('count_phase').reset_index()
+    filtered_df.loc[:,'Phase_str'] = filtered_df.loc[:,'phases'].apply(lambda x: 'N/A' if len(x) == 0 else ' '.join(map(str, x)))
+    filtered_df_pie=filtered_df.groupby("Phase_str")['nctId'].count().rename('count_phase').reset_index()
 
 
     #Select the Phase for pie chart
@@ -274,13 +236,13 @@ if st.session_state.CONNECTED:
     ''')
 
     #data for side bars
-    filtered_df["StartYear"]=filtered_df['StartDate'].dt.year
+    filtered_df["StartYear"]=filtered_df['startDate'].dt.year
     if len(selected_options) == 0:
-        filtered_df_lc=filtered_df.groupby('StartYear')['NCTId'].count().rename('Nos_CT').reset_index()
+        filtered_df_lc=filtered_df.groupby('StartYear')['nctId'].count().rename('Nos_CT').reset_index()
 
     else:
         filtered_df_lc_pie = filtered_df[filtered_df.Phase_str.isin(selected_options)]
-        filtered_df_lc = filtered_df_lc_pie.groupby('StartYear')['NCTId'].count().rename('Nos_CT').reset_index()
+        filtered_df_lc = filtered_df_lc_pie.groupby('StartYear')['nctId'].count().rename('Nos_CT').reset_index()
 
 
 
@@ -291,18 +253,18 @@ if st.session_state.CONNECTED:
 
     #Nos. of recruiting studies
     recruiting_count = (
-    filtered_df['NCTId'][filtered_df['OverallStatus'].apply(lambda x: x == ['Recruiting'])].count()
+    filtered_df['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['Recruiting'])].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['NCTId'][filtered_df['OverallStatus'].apply(lambda x: x == ['Recruiting'])].count()
+    else filtered_df_lc_pie['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['Recruiting'])].count()
     )
 
     col2.metric("Nos. Recruiting CT", recruiting_count)
 
     #Nos. of completed studies
     completion_count = (
-    filtered_df['NCTId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
+    filtered_df['nctId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['NCTId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
+    else filtered_df_lc_pie['nctId'][filtered_df['CompletionDateType'].apply(lambda x: x == ['Actual'])].count()
     )
     col3.metric("Trials completed", completion_count)
 
@@ -377,7 +339,7 @@ if st.session_state.CONNECTED:
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = key_path
 
     df_genai = filtered_df.drop(columns=['StudyType_str', 'Phase_str'])
-    df_genai.rename(columns = {'NCTId':'Trials ID'}, inplace = True)
+    df_genai.rename(columns = {'nctId':'Trials ID'}, inplace = True)
     # Apply to all columns
     df_1 = df_genai.copy()
 
