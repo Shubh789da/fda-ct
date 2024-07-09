@@ -29,7 +29,7 @@ def get_clinical_trials_data(COND):
                 break  # Exit the loop when there are no more pages
             params['pageToken'] = page_token  # Set the page token for the next request
             i += 1
-            print(f"Page {i} processed")
+            #print(f"Page {i} processed")
         else:
             print(f"Error fetching data: {response.status_code}")
             break  # Exit on error
