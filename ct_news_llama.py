@@ -275,10 +275,10 @@ if st.session_state.CONNECTED:
         st.container()
 
     with c2:
-        st.markdown('##### Top 5 sponsors')
-        sponsors=filtered_df['LeadSponsorName'].apply(lambda x: x[0]).to_frame()
-        # Group by 'LeadSponsorName' and count the occurrences
-        sponsor_counts = sponsors['LeadSponsorName'].value_counts().reset_index()
+        st.markdown('##### Top 5 industry sponsors')
+        sponsors = filtered_df[filtered_df['leadSponsor']['leadSponsorType'] == 'INDUSTRY']['leadSponsor'].apply(lambda x: x[0]).to_frame()
+        # Group by 'leadSponsor' and count the occurrences
+        sponsor_counts = sponsors['leadSponsor'].value_counts().reset_index()
         sponsor_counts.columns = ['Sponsors', 'Count']
         # Get the top 5 sponsors by count
         top5_sponsors = sponsor_counts.head(5)
