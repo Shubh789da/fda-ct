@@ -276,7 +276,7 @@ if st.session_state.CONNECTED:
 
     with c2:
         st.markdown('##### Top 5 industry sponsors')
-        sponsors = filtered_df[filtered_df['leadSponsorType'] == 'INDUSTRY']['leadSponsor']
+        sponsors = filtered_df[filtered_df['leadSponsorType'] == 'INDUSTRY']['leadSponsor'].to_frame()
         # Group by 'leadSponsor' and count the occurrences
         sponsor_counts = sponsors['leadSponsor'].value_counts().reset_index()
         sponsor_counts.columns = ['Sponsors', 'Count']
