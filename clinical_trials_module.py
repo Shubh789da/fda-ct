@@ -1,5 +1,7 @@
 import requests
 import pandas as pd
+from dateutil.parser import parse
+from dateutil.parser import ParserError  
 
 def get_clinical_trials_data(COND):
     base_url = "https://clinicaltrials.gov/api/v2/studies"
