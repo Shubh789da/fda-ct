@@ -98,13 +98,14 @@ def get_clinical_trials_data(COND):
         flat_data['interventions'] = ', '.join([', '.join(arm.get('interventionNames', [])) for arm in arms])
 
         # Extract the outcome module
-        outcome = study.get('protocolSection', {}).get('OutcomesModule', {})
-        flat_data['PrimaryOutcomes'] = ' '.join([
-                                                f"Primary Outcome {i + 1}: {primary_outcome.get('measure', '')}"
-                                                for i, primary_outcome in enumerate(outcome.get('primaryOutcomes', []))
+        outcome = study.get('protocolSection', {}).get('outcomesModule', {})
+        flat_data['primaryOutcomes'] = '\n'.join([
+                                                    f"Primary Outcome {i + 1}: {primary_outcome.get('measure', None) or 'None'}"
+                                                    for i, primary_outcome in enumerate(outcome.get('primaryOutcomes', []))
                                                 ])
-        flat_data['SecondaryOutcomes'] = ' '.join([f"Secondary Outcome {i + 1}: {secondary_outcome.get('measure', '')}"
-                                                for i, secondary_outcome in enumerate(outcome.get('secondaryOutcomes', []))
+        flat_data['secondaryOutcomes'] = '\n'.join([
+                                                    f"Secondary Outcome {i + 1}: {primary_outcome.get('measure', None) or 'None'}"
+                                                    for i, primary_outcome in enumerate(outcome.get('secondaryOutcomes', []))
                                                 ])
         #Extract Eligibility
         eligibility = study.get('protocolSection',{}).get('eligibilityModule',{})
