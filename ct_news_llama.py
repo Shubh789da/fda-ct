@@ -30,6 +30,7 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           ResetError,
                                                           UpdateError) 
 from clinical_trials_module import get_clinical_trials_data
+from collections import Counter
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -292,27 +293,41 @@ if st.session_state.CONNECTED:
 
     with c3:
         st.markdown('##### Top 5 Interventions')
-        # Explode the list column to separate rows
-        df_exploded = filtered_df.explode('ArmGroupInterventionName')
+        # # Explode the list column to separate rows
+        # df_exploded = filtered_df.explode('ArmGroupInterventionName')
         
-        # Split the intervention name and type
-        df_exploded.dropna(subset=['ArmGroupInterventionName'], inplace=True)
+        # # Split the intervention name and type
+        # df_exploded.dropna(subset=['ArmGroupInterventionName'], inplace=True)
         
-        # Apply the function to extract information
-        df_exploded[['InterventionType', 'InterventionName']] = df_exploded['ArmGroupInterventionName'].apply(extract_info).tolist()
+        # # Apply the function to extract information
+        # df_exploded[['InterventionType', 'InterventionName']] = df_exploded['ArmGroupInterventionName'].apply(extract_info).tolist()
                 
-        # Count intervention names
-        intervention_counts = df_exploded['InterventionName'].value_counts()
+        # # Count intervention names
+        # intervention_counts = df_exploded['InterventionName'].value_counts()
 
  
-        # Get the top 5 intervention names
-        top_5_interventions = intervention_counts.nlargest(5)
+        # # Get the top 5 intervention names
+        # top_5_interventions = intervention_counts.nlargest(5)
        
-        # Convert Series to DataFrame
-        top_5_interventions_df = top_5_interventions.reset_index()
+        # # Convert Series to DataFrame
+        # top_5_interventions_df = top_5_interventions.reset_index()
         
-        # Rename columns
-        top_5_interventions_df = top_5_interventions_df.rename(columns={'index': 'Interventions', 0: 'Count'})
+        # Combine the two columns and split by comma
+        combined_entities = (
+            filtered_df['interventionDrug'].fillna('') + ',' + 
+            filtered_df['interventionBiological'].fillna('')
+        )
+        all_entities = [entity.strip() for row in combined_entities for entity in row.split(',') if entity.strip()]
+        
+        # Count occurrences and get top 5
+        entity_counts = Counter(all_entities)
+        top_5_entities = entity_counts.most_common(5)
+        
+        # Create a new dataframe
+        top_5_interventions_df = pd.DataFrame(top_5_entities, columns=['Drug/Biological', 'Count'])
+      
+        # # Rename columns
+        # top_5_interventions_df = top_5_interventions_df.rename(columns={'index': 'Interventions', 0: 'Count'})
 
        
 
