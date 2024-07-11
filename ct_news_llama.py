@@ -443,7 +443,7 @@ if st.session_state.CONNECTED:
         #               model: "gpt-3.5-turbo-0125",
         #               OPENAI_API_KEY: 'sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h'
         #             )
-        llm = OpenAPI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
+        llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
         df_smart = SmartDataframe(df_1, config={'llm': llm})
     
         
