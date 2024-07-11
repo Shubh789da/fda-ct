@@ -362,12 +362,23 @@ if st.session_state.CONNECTED:
     for col in df_1.columns:
         if pd.api.types.is_integer_dtype(df_1[col]):
             pass
-        elif pd.api.types.is_datetime64_any_dtype(df_1[col]):
+        elif (pd.api.types.is_datetime64_any_dtype(df_1[col]) or pd.api.types.is_bool_dtype(df_1[col])):
             pass
         elif pd.api.types.is_bool_dtype(df_1[col]):
             pass  
         else:
             df_1[col] = df_genai.loc[:,col].apply(lambda x: 'N/A' if len(x) == 0 else ' '.join(map(str, x)))
+
+    # Iterate through columns of df_1
+    # for col in df_1.columns:
+    #     if pd.api.types.is_integer_dtype(df_1[col]):
+    #         pass
+    #     elif pd.api.types.is_datetime64_any_dtype(df_1[col]):
+    #         pass
+    #     elif pd.api.types.is_bool_dtype(df_1[col]):
+    #         pass
+    #     else:
+    #         df_1[col] = df_genai[col].apply(lambda x: 'N/A' if not x else ' '.join(map(str, x)) if isinstance(x, list) else x)  
     
     # Function to handle feedback submission
     def _submit_feedback(feedback_key,feedback):
