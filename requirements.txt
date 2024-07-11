@@ -10,3 +10,4 @@ st_btn_group
 streamlit
 streamlit_feedback
 streamlit-authenticator
+openai
