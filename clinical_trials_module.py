@@ -95,7 +95,18 @@ def get_clinical_trials_data(COND):
         # Extract arms interventions module
         arms = study.get('protocolSection', {}).get('armsInterventionsModule', {}).get('armGroups', [])
         flat_data['arms'] = ', '.join([arm.get('label') for arm in arms])
-        flat_data['interventions'] = ', '.join([', '.join(arm.get('interventionNames', [])) for arm in arms])
+        flat_data['interventions'] = ', '.join({intervention for arm in arms for intervention in arm.get('interventionNames', [])})
+
+         #interventions name
+        interventions = study.get('protocolSection', {}).get('armsInterventionsModule', {}).get('interventions', [])
+        flat_data['interventionDrug'] = ', '.join([intervention.get('name', '') for intervention in interventions 
+                                           if intervention.get('type', '').lower() == 'drug'])
+        flat_data['interventionBiological'] = ', '.join([intervention.get('name', '') for intervention in interventions 
+                                                        if intervention.get('type', '').lower() == 'biological'])
+        flat_data['interventioOthers'] = ', '.join([intervention.get('name', '') for intervention in interventions 
+                                                    if intervention.get('type', '').lower() not in ['drug', 'biological']])
+        flat_data['interventionDescription'] = '\n'.join([f"{intervention.get('name', '')}: {intervention.get('description', '')}" for intervention 
+                                                          in interventions])
 
         # Extract the outcome module
         outcome = study.get('protocolSection', {}).get('outcomesModule', {})
