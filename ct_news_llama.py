@@ -355,6 +355,7 @@ if st.session_state.CONNECTED:
 
     df_genai = filtered_df.drop(columns=['StudyType_str', 'Phase_str'])
     df_genai.rename(columns = {'nctId':'Trials ID'}, inplace = True)
+    
     # Apply to all columns
     df_1 = df_genai.copy()
 
@@ -363,6 +364,8 @@ if st.session_state.CONNECTED:
             pass
         elif pd.api.types.is_datetime64_any_dtype(df_1[col]):
             pass
+        elif pd.api.types.is_bool(df_1[col]):
+            pass  
         else:
             df_1[col] = df_genai.loc[:,col].apply(lambda x: 'N/A' if len(x) == 0 else ' '.join(map(str, x)))
     
