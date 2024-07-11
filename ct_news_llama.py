@@ -31,6 +31,7 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           UpdateError) 
 from clinical_trials_module import get_clinical_trials_data
 from collections import Counter
+from pandasai.llm import OpenAI
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -435,7 +436,14 @@ if st.session_state.CONNECTED:
 
 
         pai.clear_cache()
-        llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        # llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        # llm = OpenAI(
+        #               organization:'org-7VsS9klsOkUjb3FkcvQzxn2l',
+        #               project:'proj_9RDJQE1vAIuNz2fIPeF5cho8',
+        #               model: "gpt-3.5-turbo-0125",
+        #               OPENAI_API_KEY: 'sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h'
+        #             )
+        llm = OpenAPI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
         df_smart = SmartDataframe(df_1, config={'llm': llm})
     
         
