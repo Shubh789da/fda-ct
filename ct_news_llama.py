@@ -32,6 +32,7 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
 from clinical_trials_module import get_clinical_trials_data
 from collections import Counter
 from pandasai.llm import OpenAI
+from pandasai.responses.streamlit_response import StreamlitResponse
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -444,7 +445,7 @@ if st.session_state.CONNECTED:
         #               OPENAI_API_KEY: 'sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h'
         #             )
         llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
-        df_smart = SmartDataframe(df_1, config=({'llm': llm, llm_options:{'model':'gpt-4o'},"verbose": True}))
+        df_smart = SmartDataframe(df_1, config=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True},'response_parse': StreamlitResponse))
     
         
         feedback_counter = len(st.session_state["feedbacks"])  # Start from where we left off
