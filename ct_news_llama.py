@@ -501,7 +501,7 @@ if st.session_state.CONNECTED:
 
       
         llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
-        config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True})
+        config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
         connector = PandasConnector({"original_df": df_1}, field_descriptions=field_descriptions)
         # config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
         df_smart = SmartDataframe(connector, config=config_llm)
