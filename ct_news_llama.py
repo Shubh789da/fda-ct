@@ -501,8 +501,8 @@ if st.session_state.CONNECTED:
 
       
         llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
-        config=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
-        df_smart = SmartDataframe(df_1, config=config)
+        config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
+        df_smart = SmartDataframe(df_1, config=config_llm)
     
         
         feedback_counter = len(st.session_state["feedbacks"])  # Start from where we left off
