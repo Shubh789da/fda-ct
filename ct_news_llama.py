@@ -33,6 +33,7 @@ from clinical_trials_module import get_clinical_trials_data
 from collections import Counter
 from pandasai.llm import OpenAI
 from pandasai.responses.streamlit_response import StreamlitResponse
+from pandasai.connectors import PandasConnector
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -444,8 +445,65 @@ if st.session_state.CONNECTED:
         #               model: "gpt-3.5-turbo-0125",
         #               OPENAI_API_KEY: 'sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h'
         #             )
+
+        field_descriptions = {
+                              "nctId": "The unique identifier for each clinical trial registered on ClinicalTrials.gov.",
+                              "organization": "The name of the organization conducting the clinical trial.",
+                              "organizationType": "The type of organization, such as academic, industry, or government.",
+                              "briefTitle": "A short title for the clinical trial, intended for easy reference.",
+                              "officialTitle": "The full official title of the clinical trial.",
+                              "statusVerifiedDate": "The date when the status of the clinical trial was last verified.",
+                              "overallStatus": "The current overall status of the clinical trial (e.g., recruiting, completed).",
+                              "hasExpandedAccess": "Indicates whether the clinical trial includes expanded access to the investigational drug or device outside of the clinical trial.",
+                              "startDate": "The date when the clinical trial began.",
+                              "completionDate": "The date when the clinical trial was completed.",
+                              "completionDateType": "The type of completion date, specifying whether it refers to the actual or anticipated date.",
+                              "studyFirstSubmitDate": "The date when the clinical trial information was first submitted to ClinicalTrials.gov.",
+                              "studyFirstPostDate": "The date when the clinical trial information was first posted on ClinicalTrials.gov.",
+                              "lastUpdatePostDate": "The date when the clinical trial information was last updated on ClinicalTrials.gov.",
+                              "lastUpdatePostDateType": "The type of last update post date, specifying whether it refers to the actual or anticipated date.",
+                              "HasResults": "Indicates whether the results of the clinical trial have been posted on ClinicalTrials.gov.",
+                              "responsibleParty": "The individual or organization responsible for the overall conduct of the clinical trial.",
+                              "leadSponsor": "The primary sponsor responsible for the initiation, management, and financing of the clinical trial.",
+                              "leadSponsorType": "The type of the lead sponsor, such as academic, industry, or government.",
+                              "collaborators": "Other organizations or individuals collaborating on the clinical trial.",
+                              "collaboratorsType": "The types of collaborators involved in the clinical trial.",
+                              "briefSummary": "A brief summary of the clinical trial, providing an overview of the study's purpose and key details.",
+                              "detailedDescription": "A detailed description of the clinical trial, including comprehensive information about the study design, methodology, and objectives.",
+                              "conditions": "The medical conditions or diseases being studied in the clinical trial.",
+                              "studyType": "The type of study (e.g., interventional, observational).",
+                              "phases": "The phase of the clinical trial (e.g., Phase 1, Phase 2, Phase 3, Phase 4).",
+                              "allocation": "The method of assigning participants to different arms of the clinical trial (e.g., randomized, non-randomized).",
+                              "interventionModel": "The model of intervention used in the clinical trial (e.g., parallel, crossover).",
+                              "primaryPurpose": "The primary purpose of the clinical trial (e.g., treatment, prevention, diagnostic).",
+                              "masking": "The method used to prevent bias by concealing the allocation of participants (e.g., single-blind, double-blind).",
+                              "whoMasked": "Specifies who is masked in the clinical trial (e.g., participant, investigator).",
+                              "enrollmentCount": "The number of participants enrolled in the clinical trial.",
+                              "enrollmentType": "The type of enrollment, specifying whether the number is estimated or actual.",
+                              "arms": "The number of arms or groups in the clinical trial.",
+                              "interventionDrug": "The drugs or medications being tested or used as interventions in the clinical trial.",
+                              "interventionDescription": "Descriptions of the interventions used in the clinical trial.",
+                              "interventionOthers": "Other types of interventions used in the clinical trial (e.g., devices, procedures).",
+                              "primaryOutcomes": "The primary outcome measures being assessed in the clinical trial.",
+                              "secondaryOutcomes": "The secondary outcome measures being assessed in the clinical trial.",
+                              "eligibilityCriteria": "The criteria that determine whether individuals can participate in the clinical trial.",
+                              "healthyVolunteers": "Indicates whether healthy volunteers are accepted in the clinical trial.",
+                              "eligibilityGender": "The gender eligibility criteria for participants in the clinical trial.",
+                              "eligibilityMinimumAge": "The minimum age of participants eligible for the clinical trial.",
+                              "eligibilityMaximumAge": "The maximum age of participants eligible for the clinical trial.",
+                              "eligibilityStandardAges": "Standard age groups eligible for the clinical trial.",
+                              "LocationName": "The names of the locations where the clinical trial is being conducted.",
+                              "city": "The city where the clinical trial locations are situated.",
+                              "state": "The state where the clinical trial locations are situated.",
+                              "country": "The country where the clinical trial locations are situated.",
+                              "interventionBiological": "Biological interventions (e.g., vaccines, blood products) used in the clinical trial."
+                            }
+
+      
         llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
-        df_smart = SmartDataframe(df_1, config=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse}))
+        config=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse})
+        connector = PandasConnector(config,{"original_df": df_1}, field_descriptions=field_descriptions) 
+        df_smart = SmartDataframe(connector)
     
         
         feedback_counter = len(st.session_state["feedbacks"])  # Start from where we left off
