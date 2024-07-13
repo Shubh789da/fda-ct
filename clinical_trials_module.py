@@ -160,7 +160,7 @@ def get_clinical_trials_data(COND):
             return pd.NaT
 
     # Convert date columns
-    date_columns = ['startDate', 'completionDate', 'studyFirstSubmitDate', 'studyFirstPostDate', 'lastUpdatePostDate']
+    date_columns = ['statusVerifiedDate','startDate', 'completionDate', 'studyFirstSubmitDate', 'studyFirstPostDate', 'lastUpdatePostDate']
     
     for col in date_columns:
         df[col] = df[col].apply(parse_date)
