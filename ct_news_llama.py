@@ -189,7 +189,7 @@ if st.session_state.CONNECTED:
     drop_columns= [
                     "organizationType","officialTitle","statusVerifiedDate","hasExpandedAccess", "studyFirstSubmitDate",
                    "studyFirstPostDate", "lastUpdatePostDate", "lastUpdatePostDateType", "HasResults", "responsibleParty",
-                   "leadSponsorType", "collaboratorsType", "briefSummary", "detailedDescription", "studyType", "allocation",
+                   "leadSponsorType", "collaboratorsType", "briefSummary", "detailedDescription", "allocation",
                    "interventionModel","primaryPurpose","masking","whoMasked","enrollmentCount","enrollmentType","arms",
                    "interventionDrug","interventionBiological","interventioOthers","interventionDescription","primaryOutcomes",
                    "secondaryOutcomes","eligibilityCriteria","healthyVolunteers","eligibilityGender","eligibilityMinimumAge",
