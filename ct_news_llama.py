@@ -191,8 +191,8 @@ if st.session_state.CONNECTED:
                    "studyFirstPostDate", "lastUpdatePostDate", "lastUpdatePostDateType", "HasResults", "responsibleParty",
                    "collaboratorsType", "briefSummary", "detailedDescription", "allocation","interventionModel",
                    "primaryPurpose","masking","whoMasked","enrollmentCount","enrollmentType","arms",
-                   "interventionBiological","interventioOthers","interventionDescription","primaryOutcomes",
-                   "secondaryOutcomes","eligibilityCriteria","healthyVolunteers","eligibilityGender","eligibilityMinimumAge",
+                   "interventioOthers","interventionDescription","primaryOutcomes","secondaryOutcomes",
+                   "eligibilityCriteria","healthyVolunteers","eligibilityGender","eligibilityMinimumAge",
                    "eligibilityMaximumAge","eligibilityStandardAges"
                   ]
     df=df.drop(columns=drop_columns)
