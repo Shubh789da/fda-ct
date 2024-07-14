@@ -191,7 +191,7 @@ if st.session_state.CONNECTED:
                    "studyFirstPostDate", "lastUpdatePostDate", "lastUpdatePostDateType", "HasResults", "responsibleParty",
                    "collaboratorsType", "briefSummary", "detailedDescription", "allocation","interventionModel",
                    "primaryPurpose","masking","whoMasked","enrollmentCount","enrollmentType","arms",
-                   "interventionDrug","interventionBiological","interventioOthers","interventionDescription","primaryOutcomes",
+                   "interventionBiological","interventioOthers","interventionDescription","primaryOutcomes",
                    "secondaryOutcomes","eligibilityCriteria","healthyVolunteers","eligibilityGender","eligibilityMinimumAge",
                    "eligibilityMaximumAge","eligibilityStandardAges"
                   ]
