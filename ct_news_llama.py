@@ -186,7 +186,17 @@ if st.session_state.CONNECTED:
         chat_disable=True        
         
     df = get_clinical_trials_data(st.session_state.text)
-
+    drop_columns= [
+                    "organizationType","officialTitle","statusVerifiedDate","hasExpandedAccess", "studyFirstSubmitDate",
+                   "studyFirstPostDate", "lastUpdatePostDate", "lastUpdatePostDateType", "HasResults", "responsibleParty",
+                   "leadSponsorType", "collaboratorsType", "briefSummary", "detailedDescription", "studyType", "allocation",
+                   "interventionModel","primaryPurpose","masking","whoMasked","enrollmentCount","enrollmentType","arms",
+                   "interventionDrug","interventionBiological","interventioOthers","interventionDescription","primaryOutcomes",
+                   "secondaryOutcomes","eligibilityCriteria","healthyVolunteers","eligibilityGender","eligibilityMinimumAge",
+                   "eligibilityMaximumAge","eligibilityStandardAges"
+                  ]
+    df=df.drop(columns=drop_columns)
+  
      #Heading for sidebar
     st.sidebar.header('CT Dashboard `v0.3`')
 
@@ -497,10 +507,10 @@ if st.session_state.CONNECTED:
                             }
 
       
-        llm = OpenAI(api_token="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h")
-        config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
+        llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        # config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
         connector = PandasConnector({"original_df": df_1}, field_descriptions=field_descriptions)
-        # config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
+        config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
         df_smart = SmartDataframe(connector, config=config_llm)
     
         
