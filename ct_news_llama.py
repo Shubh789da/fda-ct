@@ -264,18 +264,18 @@ if st.session_state.CONNECTED:
 
     #Nos. of recruiting studies
     recruiting_count = (
-    filtered_df['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['Recruiting'])].count()
+    filtered_df['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['RECRUITING'])].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['Recruiting'])].count()
+    else filtered_df_lc_pie['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['RECRUITING'])].count()
     )
 
     col2.metric("Nos. Recruiting CT", recruiting_count)
 
     #Nos. of completed studies
     completion_count = (
-    filtered_df['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['Actual'])].count()
+    filtered_df['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['ACTUAL'])].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['Actual'])].count()
+    else filtered_df_lc_pie['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['ACTUAL'])].count()
     )
     col3.metric("Trials completed", completion_count)
 
@@ -461,7 +461,7 @@ if st.session_state.CONNECTED:
                               "'ACTIVE_NOT_RECRUITING', 'RECRUITING', 'WITHDRAWN', 'TERMINATED', 'ENROLLING_BY_INVITATION', 'NOT_YET_RECRUITING', 'APPROVED_FOR_MARKETING',).",
                               "startDate": "The date when the clinical trial began.",
                               "completionDate": "The date when the clinical trial was completed.",
-                              "completionDateType": "The type of completion date, specifying whether it refers to the actual or anticipated date.",
+                              "completionDateType": "The type of completion date, specifying whether it refers to the ACTUAL or ESTIMATED.",
                               "leadSponsor": "The primary sponsor responsible for the initiation, management, and financing of the clinical trial.",
                               "leadSponsorType": "The type of the lead sponsor, such as academic, industry, or government.",
                               "collaborators": "Other organizations or individuals collaborating on the clinical trial.",
