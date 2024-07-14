@@ -59,7 +59,8 @@ client = MongoClient(uri_mdb, server_api=ServerApi('1'))
 #login function
 @st.experimental_dialog("Login")
 def show_authentication_ui():
-    tab1,tab2,tab3,tab4= st.tabs(["Login","Register","Forgot Password","Update Details"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Login", "Register", "Forgot Password", "Update Details"])
+    
     with tab1:
         # Creating a login widget
         try:
@@ -67,50 +68,46 @@ def show_authentication_ui():
         except LoginError as e:
             st.error(e)
         
-        if st.session_state["authentication_status"]:
-            # authenticator.logout()
-            # st.write(f'Welcome *{st.session_state["name"]}*')
-            st.experimental_rerun() 
-            # st.title('Some content')
-        elif st.session_state["authentication_status"] is False:
+        if st.session_state.get("authentication_status"):
+            authenticator.logout()
+            st.write(f'Welcome *{st.session_state["name"]}*')
+            st.experimental_rerun()
+        elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
-        elif st.session_state["authentication_status"] is None:
-            st.warning('Please Login to use GenAI for datanalysis')
+        elif st.session_state.get("authentication_status") is None:
+            st.warning('Please Login to use GenAI for data analysis')
 
     with tab2:
-        # # Creating a new user registration widget
+        # Creating a new user registration widget
         try:
-            (email_of_registered_user,
-                username_of_registered_user,
-                name_of_registered_user) = authenticator.register_user(pre_authorization=False)
+            email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
                 st.success('User registered successfully')
         except RegisterError as e:
             st.error(e)
     
-    
-    with tab3:    
-        # # Creating a forgot password widget
+    with tab3:
+        # Creating a forgot password widget
         try:
-            (username_of_forgotten_password,
-                email_of_forgotten_password,
-                new_random_password) = authenticator.forgot_password()
+            username_of_forgotten_password, email_of_forgotten_password, new_random_password = authenticator.forgot_password()
             if username_of_forgotten_password:
                 st.success('New password sent securely')
-                # Random password to be transferred to the user securely
-            elif not username_of_forgotten_password:
+                # Ensure the random password is transferred to the user securely
+            else:
                 st.error('Username not found')
         except ForgotError as e:
             st.error(e)
 
     with tab4:
-        # # Creating an update user details widget
-        if st.session_state["authentication_status"]:
+        # Creating an update user details widget
+        if st.session_state.get("authentication_status"):
             try:
                 if authenticator.update_user_details(st.session_state["username"]):
                     st.success('Entries updated successfully')
             except UpdateError as e:
                 st.error(e)
+        else:
+            st.warning('Please log in to update your details')
     
     # Saving config file
     with open('config.yaml', 'w', encoding='utf-8') as file:
