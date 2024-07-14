@@ -264,18 +264,18 @@ if st.session_state.CONNECTED:
 
     #Nos. of recruiting studies
     recruiting_count = (
-    filtered_df['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['RECRUITING'])].count()
+    filtered_df[filtered_df['overallStatus'] == 'RECRUITING']['nctId'].count()
     if len(selected_options) == 0
-    else filtered_df_lc_pie['nctId'][filtered_df['overallStatus'].apply(lambda x: x == ['RECRUITING'])].count()
+    else filtered_df_lc_pie[filtered_df_lc_pie['overallStatus'] == 'RECRUITING']['nctId'].count()
     )
 
     col2.metric("Nos. Recruiting CT", recruiting_count)
 
     #Nos. of completed studies
     completion_count = (
-    filtered_df['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['ACTUAL'])].count()
+    filtered_df[filtered_df['completionDateType'] == 'ACTUAL']['nctId'].count()  
     if len(selected_options) == 0
-    else filtered_df_lc_pie['nctId'][filtered_df['completionDateType'].apply(lambda x: x == ['ACTUAL'])].count()
+    else filtered_df_lc_pie[filtered_df_lc_pie['completionDateType'] == 'ACTUAL']['nctId'].count()
     )
     col3.metric("Trials completed", completion_count)
 
