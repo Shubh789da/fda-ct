@@ -229,7 +229,7 @@ if st.session_state.CONNECTED:
     st.sidebar.markdown('''
     ---
     if st.session_state.subscriber == False:
-      st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789")
+      st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789",type="primary")
     Created with ❤️ by [Shubhanshu](https://www.linkedin.com/in/shubh789/).
     ''')
 
