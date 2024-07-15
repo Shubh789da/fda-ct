@@ -39,7 +39,7 @@ st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 st.title('CT Analysis')
 
-normal_page = st.Page("ct_news_llama.py", title="Standard CT QnA", icon="☺️")
+# normal_page = st.Page("ct_news_llama.py", title="Standard CT QnA", icon="☺️")
 pro_page = st.Page("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
 
 pg = st.navigation([pro_page])
