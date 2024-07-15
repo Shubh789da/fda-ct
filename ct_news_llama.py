@@ -35,7 +35,7 @@ from pandasai.llm import OpenAI
 from pandasai.responses.streamlit_response import StreamlitResponse
 from pandasai.connectors import PandasConnector
 
-
+st.set_page_config(page_title="CT Analysis", page_icon="💭",layout='wide', initial_sidebar_state='expanded')
 
 normal_page = st.Page("ct_news_llama.py", title="Standard CT QnA", icon="☺️")
 pro_page = st.Page("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
@@ -43,7 +43,7 @@ pro_page = st.Page("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
 pg = st.navigation([normal_page, pro_page])
 # st.set_page_config()
 st.title('CT Analysis')
-st.set_page_config(page_title="CT Analysis", page_icon="💭",layout='wide', initial_sidebar_state='expanded')
+
 pg.run()
 
 # Loading config file
