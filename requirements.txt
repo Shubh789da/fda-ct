@@ -12,3 +12,4 @@ streamlit_feedback
 streamlit-authenticator
 openai
 llama-index
+llama-index-experimental
