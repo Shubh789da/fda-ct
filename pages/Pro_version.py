@@ -587,7 +587,7 @@ if st.session_state.CONNECTED:
                 )
                 
     
-        if prompt := st.chat_input(placeholder="What is this data about?",disabled= chat_disable):
+        if prompt := st.chat_input(placeholder="Subscribe to PRO Version for advance quering",disabled= True):
     
             # Create a new feedback entry
             # st.session_state.messages.append({"role": "user", "content": prompt})
