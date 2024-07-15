@@ -43,7 +43,7 @@ st.title('CT Analysis')
 pro_page = st.Page("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
 
 pg = st.navigation([pro_page])
-st.set_page_config(page_title="CT Analysis", page_icon="💭")
+# st.set_page_config(page_title="CT Analysis", page_icon="💭")
 pg.run()
 
 # Loading config file
