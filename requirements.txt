@@ -11,3 +11,4 @@ streamlit
 streamlit_feedback
 streamlit-authenticator
 openai
+llama-index
