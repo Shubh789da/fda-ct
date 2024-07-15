@@ -223,10 +223,13 @@ if st.session_state.CONNECTED:
     options = filtered_df_pie['Phase_str'].unique().tolist()
     selected_options = st.sidebar.multiselect('Which app do you want?',options)
 
-
+    if "subscriber" not in st.session_state:
+          st.session_state.subscriber = False
 
     st.sidebar.markdown('''
     ---
+    if st.session_state.subscriber == False:
+      st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789")
     Created with ❤️ by [Shubhanshu](https://www.linkedin.com/in/shubh789/).
     ''')
 
@@ -614,12 +617,7 @@ if st.session_state.CONNECTED:
         # st.rerun()
     
         # Clear conversation history button
-        if "subscriber" not in st.session_state:
-          st.session_state.subscriber = False
-
-        if st.session_state.subscriber == False:
-          st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789")
-        elif st.session_state.subscriber==True:  
+        if st.session_state.subscriber==True:  
           if st.sidebar.button("Clear conversation history", type="primary"):
               # Clear messages and feedbacks
               st.session_state.clear = True
