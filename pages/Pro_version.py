@@ -614,13 +614,20 @@ if st.session_state.CONNECTED:
         # st.rerun()
     
         # Clear conversation history button
-        if st.sidebar.button("Clear conversation history", type="primary"):
-            # Clear messages and feedbacks
-            st.session_state.clear = True
-            
-            for key in st.session_state.feedbacks:
-                st.session_state[f"feedback_submitted_{key}"] = False
-            st.rerun()
+        if "subscriber" not in st.session_state:
+          st.session_state.subscriber = False
+
+        if subscriber == False:
+          st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789")
+                    
+        elif subscriber==True:  
+          if st.sidebar.button("Clear conversation history", type="primary"):
+              # Clear messages and feedbacks
+              st.session_state.clear = True
+              
+              for key in st.session_state.feedbacks:
+                  st.session_state[f"feedback_submitted_{key}"] = False
+              st.rerun()
 
         # with t2:
 
