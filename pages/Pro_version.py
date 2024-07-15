@@ -617,10 +617,9 @@ if st.session_state.CONNECTED:
         if "subscriber" not in st.session_state:
           st.session_state.subscriber = False
 
-        if subscriber == False:
+        if st.session_state.subscriber == False:
           st.sidebar.link_button("Click here for subscription☕","https://www.buymeacoffee.com/Shubh789")
-                    
-        elif subscriber==True:  
+        elif st.session_state.subscriber==True:  
           if st.sidebar.button("Clear conversation history", type="primary"):
               # Clear messages and feedbacks
               st.session_state.clear = True
