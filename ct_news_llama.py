@@ -42,7 +42,7 @@ st.title('CT Analysis')
 normal_page = st.Page("ct_news_llama.py", title="Standard CT QnA", icon="☺️")
 pro_page = st.Page("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
 
-pg = st.navigation([pro_page])
+pg = st.navigation([normal_page, pro_page])
 st.set_page_config(page_title="CT Analysis", page_icon="💭")
 pg.run()
 
