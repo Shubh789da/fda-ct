@@ -38,15 +38,6 @@ from pandasai.connectors import PandasConnector
 st.set_page_config(page_title="CT Analysis", page_icon="💭",layout='wide', initial_sidebar_state='expanded')
 st.title('CT Analysis')
 
-
-# normal_page = st.Page("ct_news_llama.py", title="Standard CT QnA", icon="☺️")
-# st.page_link("pages/Pro_version.py", title="Pro CT QnA", icon="😎")
-
-# pg = st.navigation([normal_page, pro_page])
-# # st.set_page_config()
-
-# pg.run()
-
 # Loading config file
 with open('config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=SafeLoader)
