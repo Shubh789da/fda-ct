@@ -480,8 +480,8 @@ if st.session_state.CONNECTED:
         )
         response_synthesis_prompt_str = (
             "Given an input question, synthesize an answer for audience expert in clinical trial data from the query results.\n"
-            "Include NCTIDs in answer\n"
-            "Query: {query_str}\n and do not add any extra generated text\n"
+            "Query: {query_str}\n"
+            "Do not add any extra generated text and include NCTIDs in answer if required\n"
             "Pandas Instructions (optional):\n{pandas_instructions}\n\n"
             "Pandas Output: {pandas_output}\n\n"
             "Response: "
