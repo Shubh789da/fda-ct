@@ -592,10 +592,10 @@ if st.session_state.CONNECTED:
       
         if st.session_state["name"] in pro_user:
           is_pro_user=True
-          chat_msg = 'Subscribe to PRO Version for advance quering'
+          chat_msg = 'Ask questions regarding your query(Pro version)'
         else:
           is_pro_user=False
-          chat_msg = 'Ask questions regarding your query(Pro version) '
+          chat_msg = 'Subscribe to PRO Version for advance quering'
       
         if prompt := st.chat_input(placeholder=chat_msg, disabled = not(is_pro_user)):
     
