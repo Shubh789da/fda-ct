@@ -588,12 +588,16 @@ if st.session_state.CONNECTED:
                     on_submit=lambda feedback: _submit_feedback(feedback_key, feedback),
                     key=feedback_key,
                 )
-        pro_user=['Ashok','Shubh07','shubh']        
+        pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
+      
         if st.session_state["name"] in pro_user:
           is_pro_user=True
+          chat_msg = 'Subscribe to PRO Version for advance quering'
         else:
           is_pro_user=False
-        if prompt := st.chat_input(placeholder="Subscribe to PRO Version for advance quering",disabled = not(is_pro_user)):
+          chat_msg = 'Ask questions regarding your query(Pro version) '
+      
+        if prompt := st.chat_input(placeholder=chat_msg, disabled = not(is_pro_user)):
     
             # Create a new feedback entry
             # st.session_state.messages.append({"role": "user", "content": prompt})
