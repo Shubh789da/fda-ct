@@ -588,7 +588,7 @@ if st.session_state.CONNECTED:
                     on_submit=lambda feedback: _submit_feedback(feedback_key, feedback),
                     key=feedback_key,
                 )
-        pro_user=['Ashok','Shubh07']        
+        pro_user=['Ashok','Shubh07','shubh']        
         if st.session_state["name"] in pro_user:
           is_pro_user=True
         else:
