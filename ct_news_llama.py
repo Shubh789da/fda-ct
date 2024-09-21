@@ -557,7 +557,7 @@ if st.session_state.CONNECTED:
                 
     
                 # to show chart
-                st.set_option('deprecation.showPyplotGlobalUse', False)
+                # st.set_option('deprecation.showPyplotGlobalUse', False)
     
                 if plt.get_fignums():
                     st.pyplot()
