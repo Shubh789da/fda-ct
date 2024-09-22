@@ -492,8 +492,8 @@ if st.session_state.CONNECTED:
         )
         pandas_output_parser = PandasInstructionParser(df)
         response_synthesis_prompt = PromptTemplate(response_synthesis_prompt_str)
-        llm = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="o1-preview")
-        llm_code = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="o1-preview")
+        llm = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="gpt-4o")
+        # llm_code = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="o1-preview")
 
         qp = QP(
             modules={
