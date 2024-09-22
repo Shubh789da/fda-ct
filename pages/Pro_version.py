@@ -499,7 +499,7 @@ if st.session_state.CONNECTED:
             modules={
                 "input": InputComponent(),
                 "pandas_prompt": pandas_prompt,
-                "llm1": llm_code,
+                "llm1": llm,
                 "pandas_output_parser": pandas_output_parser,
                 "response_synthesis_prompt": response_synthesis_prompt,
                 "llm2": llm,
