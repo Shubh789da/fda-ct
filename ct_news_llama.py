@@ -81,6 +81,14 @@ def show_authentication_ui():
         try:
             email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
+               # Update the config with new user details
+                config['credentials']['users'][username_of_registered_user] = {
+                    'name': name_of_registered_user,
+                    'email': email_of_registered_user,
+                    'password': authenticator.generate_password_hash(email_of_registered_user)  # Adjust this as per your password handling
+                }
+                # Save changes to YAML
+                save_config(config)
                 st.success('User registered successfully')
         except RegisterError as e:
             st.error(e)
@@ -90,6 +98,9 @@ def show_authentication_ui():
         try:
             username_of_forgotten_password, email_of_forgotten_password, new_random_password = authenticator.forgot_password()
             if username_of_forgotten_password:
+                # Update config with new password
+                config['credentials']['users'][username_of_forgotten_password]['password'] = authenticator.generate_password_hash(new_random_password)
+                save_config(config)
                 st.success('New password sent securely')
                 # Ensure the random password is transferred to the user securely
             else:
@@ -102,15 +113,26 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             try:
                 if authenticator.update_user_details(st.session_state["username"]):
-                    st.success('Entries updated successfully')
+                  save_config(config)  
+                  st.success('Entries updated successfully')
             except UpdateError as e:
                 st.error(e)
         else:
             st.warning('Please log in to update your details')
     
     # Saving config file
-    with open('config.yaml', 'w', encoding='utf-8') as file:
-        yaml.dump(config, file, default_flow_style=False)
+    # with open('config.yaml', 'w', encoding='utf-8') as file:
+    #     yaml.dump(config, file, default_flow_style=False)
+
+# Function to save config to YAML file
+def save_config(config_data):
+    try:
+        with open('config.yaml', 'w', encoding='utf-8') as file:
+            yaml.dump(config_data, file, default_flow_style=False)
+    except Exception as e:
+        st.error(f"Error saving configuration: {e}")
+
+
 
 def clear_submit():
     """
