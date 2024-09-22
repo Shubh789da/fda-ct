@@ -606,9 +606,10 @@ if st.session_state.CONNECTED:
             st.session_state.messages.append({"role": "user", "content": prompt})
     
             with st.chat_message("assistant"):
-                response = qp.run(query_str=str(prompt))
+                response_q = qp.run(query_str=str(prompt))
                 # response = df_smart.chat(prompt)
-                st.write(str(response.message.content))
+                response = str(response_q.message.content))
+                st.write(response)
                 
     
                 # to show chart
