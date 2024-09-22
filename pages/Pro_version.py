@@ -608,7 +608,7 @@ if st.session_state.CONNECTED:
             with st.chat_message("assistant"):
                 response_q = qp.run(query_str=str(prompt))
                 # response = df_smart.chat(prompt)
-                response = str(response_q.message.content))
+                response = str(response_q.message.content)
                 st.write(response)
                 
     
