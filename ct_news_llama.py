@@ -72,7 +72,7 @@ def show_authentication_ui():
             st.write(f'Welcome *{st.session_state["name"]}*')
             # st.experimental_rerun()
             # st.session_state.rerun()
-            st.rerun(scope="fragment")
+            st.rerun()
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
         elif st.session_state.get("authentication_status") is None:
