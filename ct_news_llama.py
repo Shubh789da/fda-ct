@@ -83,14 +83,16 @@ def show_authentication_ui():
         try:
             email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
-               # Update the config with new user details
-                config['credentials']['users'][username_of_registered_user] = {
-                    'name': name_of_registered_user,
-                    'email': email_of_registered_user,
-                    'password': authenticator.generate_password_hash(email_of_registered_user)  # Adjust this as per your password handling
-                }
+               # # Update the config with new user details
+               #  config['credentials']['users'][username_of_registered_user] = {
+               #      'name': name_of_registered_user,
+               #      'email': email_of_registered_user,
+               #      'password': authenticator.generate_password_hash(email_of_registered_user)  # Adjust this as per your password handling
+               #  }
                 # Save changes to YAML
-                save_config(config)
+                # save_config(config)
+                with open('config.yaml', 'w') as file:
+                  yaml.dump(config, file, default_flow_style=False)
                 st.success('User registered successfully')
         except RegisterError as e:
             st.error(e)
