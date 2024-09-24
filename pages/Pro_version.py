@@ -59,6 +59,46 @@ authenticator = stauth.Authenticate(
 #Setup mongoDB authentication
 uri_mdb = "mongodb+srv://postlytllp:HGlyKh6SQfpqlejf@postlyt-test.l88dp2e.mongodb.net/?retryWrites=true&w=majority&appName=postlyt-test"
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
+db = client['test1']
+collection_user = db['user_details']
+
+def get_credentials_from_mongo():
+    
+    users = collection_user.find({})
+    credentials = {"usernames": {}}
+
+    for user in users:
+        credentials["usernames"][user["User_ID"]] = {
+            "email": user["email"],
+            "failed_login_attempts": user.get("failed_login_attempts", 0),
+            "logged_in": user.get("logged_in", False),
+            "name": user["name"],
+            "password": user["password"]
+        }
+    
+    return credentials
+
+# Save user data to MongoDB (for registration, reset password, etc.)
+def update_user_in_mongo(user_id, update_data):
+    collection_user.update_one({"User_ID": user_id}, {"$set": update_data})
+
+# Loading config file
+with open('config.yaml', 'r', encoding='utf-8') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+# Fetching the credentials from MongoDB
+credentials_from_db = get_credentials_from_mongo()
+
+#login function
+# Creating the authenticator object
+authenticator = stauth.Authenticate(
+    credentials_from_db,
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
+
 
 #login function
 @st.experimental_dialog("Login")
@@ -75,7 +115,7 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             authenticator.logout()
             st.write(f'Welcome *{st.session_state["name"]}*')
-            st.experimental_rerun()
+            st.rerun()
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
         elif st.session_state.get("authentication_status") is None:
@@ -84,9 +124,22 @@ def show_authentication_ui():
     with tab2:
         # Creating a new user registration widget
         try:
-            email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
+            email_of_registered_user, username_of_registered_user, name_of_registered_user, new_password  = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
+                # Insert new user into MongoDB
+                hashed_password = Hasher._hash(new_password)
+                # hashed_password = new_password
+                collection_user.insert_one({
+                    "User_ID": username_of_registered_user,
+                    "email": email_of_registered_user,
+                    "name": name_of_registered_user,
+                    "password": hashed_password,
+                    "failed_login_attempts": 0,
+                    "logged_in": False,
+                    "pro_user" : False
+                })
                 st.success('User registered successfully')
+                # st.rerun()
         except RegisterError as e:
             st.error(e)
     
@@ -95,6 +148,10 @@ def show_authentication_ui():
         try:
             username_of_forgotten_password, email_of_forgotten_password, new_random_password = authenticator.forgot_password()
             if username_of_forgotten_password:
+                # Update MongoDB with the new password
+                # new_password = Hasher._hash(st.session_state['new_password'])
+                new_password = st.session_state['new_password']
+                update_user_in_mongo(st.session_state["username"], {"password": new_password})
                 st.success('New password sent securely')
                 # Ensure the random password is transferred to the user securely
             else:
@@ -107,6 +164,11 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             try:
                 if authenticator.update_user_details(st.session_state["username"]):
+                    # Update the MongoDB with new details
+                    update_user_in_mongo(st.session_state["username"], {
+                        "name": st.session_state["new_name"],
+                        "email": st.session_state["new_email"]
+                    })
                     st.success('Entries updated successfully')
             except UpdateError as e:
                 st.error(e)
@@ -588,7 +650,13 @@ if st.session_state.CONNECTED:
                     on_submit=lambda feedback: _submit_feedback(feedback_key, feedback),
                     key=feedback_key,
                 )
-        pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
+        # Query to get all users where pro_user is True and return only the userid field
+        pro_user_ids = collection_user.find({"pro_user": True}, {"_id": 0, "User_ID": 1})
+        
+        # Convert the cursor into a list of user IDs
+        pro_user = [user['User_ID'] for user in pro_user_ids]
+
+        # pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
       
         if st.session_state["name"] in pro_user:
           is_pro_user=True
