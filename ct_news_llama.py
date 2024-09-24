@@ -116,7 +116,7 @@ def show_authentication_ui():
             email_of_registered_user, username_of_registered_user, name_of_registered_user, new_password  = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
                 # Insert new user into MongoDB
-                # hashed_password = Hasher._hash(st.session_state['new_password'])
+                hashed_password = Hasher._hash(new_password)
                 hashed_password = new_password
                 collection_user.insert_one({
                     "User_ID": username_of_registered_user,
