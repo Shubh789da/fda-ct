@@ -118,7 +118,7 @@ def show_authentication_ui():
     with tab2:
         # Creating a new user registration widget
         try:
-            username_of_registered_user,  email_of_registered_user, name_of_registered_user, new_password  = authenticator.register_user(pre_authorization=False)
+            email_of_registered_user, username_of_registered_user, name_of_registered_user, new_password  = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
                 # Insert new user into MongoDB
                 # hashed_password = Hasher._hash(st.session_state['new_password'])
