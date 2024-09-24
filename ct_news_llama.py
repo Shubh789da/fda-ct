@@ -29,7 +29,7 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           RegisterError,
                                                           ResetError,
                                                           UpdateError)
-                                                                    ) 
+                                                                    
 from streamlit_authenticator.utilities.hasher import Hasher
 from streamlit_authenticator.utilities.helpers import Helpers
 from streamlit_authenticator.utilities.validator import Validator
