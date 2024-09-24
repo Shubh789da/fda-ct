@@ -124,7 +124,8 @@ def show_authentication_ui():
                     "name": name_of_registered_user,
                     "password": hashed_password,
                     "failed_login_attempts": 0,
-                    "logged_in": False
+                    "logged_in": False,
+                    "pro_user": False
                 })
                 st.success('User registered successfully')
                 # st.rerun()
