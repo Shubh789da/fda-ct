@@ -28,7 +28,11 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           LoginError,
                                                           RegisterError,
                                                           ResetError,
-                                                          UpdateError) 
+                                                          UpdateError)
+                                                                    ) 
+from streamlit_authenticator.utilities.hasher import Hasher
+from streamlit_authenticator.utilities.helpers import Helpers
+from streamlit_authenticator.utilities.validator import Validator
 from clinical_trials_module import get_clinical_trials_data
 from collections import Counter
 from pandasai.llm import OpenAI
@@ -54,6 +58,49 @@ authenticator = stauth.Authenticate(
 #Setup mongoDB authentication
 uri_mdb = "mongodb+srv://postlytllp:HGlyKh6SQfpqlejf@postlyt-test.l88dp2e.mongodb.net/?retryWrites=true&w=majority&appName=postlyt-test"
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
+db = client['test1']
+collection_user = db['user_details']
+
+# Fetch credentials from MongoDB
+def get_credentials_from_mongo():
+    
+    users = collection_user.find({})
+    credentials = {"usernames": {}}
+
+    for user in users:
+        credentials["usernames"][user["User_ID"]] = {
+            "email": user["email"],
+            "failed_login_attempts": user.get("failed_login_attempts", 0),
+            "logged_in": user.get("logged_in", False),
+            "name": user["name"],
+            "password": user["password"]
+        }
+    
+    return credentials
+
+# Save user data to MongoDB (for registration, reset password, etc.)
+def update_user_in_mongo(user_id, update_data):
+    collection_user.update_one({"User_ID": user_id}, {"$set": update_data})
+
+# Loading config file
+with open('config.yaml', 'r', encoding='utf-8') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+# Fetching the credentials from MongoDB
+credentials_from_db = get_credentials_from_mongo()
+
+# Hashing all plain text passwords once
+# Hasher.hash_passwords(credentials_from_db)
+
+# Creating the authenticator object
+authenticator = stauth.Authenticate(
+    credentials_from_db,
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
+
 
 #login function
 @st.experimental_dialog("Login")
@@ -70,9 +117,7 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             authenticator.logout()
             st.write(f'Welcome *{st.session_state["name"]}*')
-            # st.experimental_rerun()
-            # st.session_state.rerun()
-            st.rerun()
+            st.experimental_rerun()
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
         elif st.session_state.get("authentication_status") is None:
@@ -81,19 +126,21 @@ def show_authentication_ui():
     with tab2:
         # Creating a new user registration widget
         try:
-            email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
+            name_of_registered_user, email_of_registered_user, username_of_registered_user, new_password  = authenticator.register_user(pre_authorization=False)
             if email_of_registered_user:
-               # # Update the config with new user details
-               #  config['credentials']['users'][username_of_registered_user] = {
-               #      'name': name_of_registered_user,
-               #      'email': email_of_registered_user,
-               #      'password': authenticator.generate_password_hash(email_of_registered_user)  # Adjust this as per your password handling
-               #  }
-                # Save changes to YAML
-                # save_config(config)
-                with open('config.yaml', 'w') as file:
-                  yaml.dump(config, file, default_flow_style=False)
+                # Insert new user into MongoDB
+                # hashed_password = Hasher._hash(st.session_state['new_password'])
+                hashed_password = new_password
+                collection_user.insert_one({
+                    "User_ID": username_of_registered_user,
+                    "email": email_of_registered_user,
+                    "name": name_of_registered_user,
+                    "password": hashed_password,
+                    "failed_login_attempts": 0,
+                    "logged_in": False
+                })
                 st.success('User registered successfully')
+                # st.rerun()
         except RegisterError as e:
             st.error(e)
     
@@ -102,9 +149,10 @@ def show_authentication_ui():
         try:
             username_of_forgotten_password, email_of_forgotten_password, new_random_password = authenticator.forgot_password()
             if username_of_forgotten_password:
-                # Update config with new password
-                config['credentials']['users'][username_of_forgotten_password]['password'] = authenticator.generate_password_hash(new_random_password)
-                save_config(config)
+                # Update MongoDB with the new password
+                # new_password = Hasher._hash(st.session_state['new_password'])
+                new_password = st.session_state['new_password']
+                update_user_in_mongo(st.session_state["username"], {"password": new_password})
                 st.success('New password sent securely')
                 # Ensure the random password is transferred to the user securely
             else:
@@ -117,24 +165,22 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             try:
                 if authenticator.update_user_details(st.session_state["username"]):
-                  save_config(config)  
-                  st.success('Entries updated successfully')
+                    # Update the MongoDB with new details
+                    update_user_in_mongo(st.session_state["username"], {
+                        "name": st.session_state["new_name"],
+                        "email": st.session_state["new_email"]
+                    })
+                    st.success('Entries updated successfully')
             except UpdateError as e:
                 st.error(e)
         else:
             st.warning('Please log in to update your details')
     
     # Saving config file
-    # with open('config.yaml', 'w', encoding='utf-8') as file:
-    #     yaml.dump(config, file, default_flow_style=False)
+    with open('config.yaml', 'w', encoding='utf-8') as file:
+        yaml.dump(config, file, default_flow_style=False)
 
-# Function to save config to YAML file
-def save_config(config_data):
-    try:
-        with open('config.yaml', 'w', encoding='utf-8') as file:
-            yaml.dump(config_data, file, default_flow_style=False)
-    except Exception as e:
-        st.error(f"Error saving configuration: {e}")
+
 
 
 
