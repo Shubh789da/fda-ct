@@ -13,3 +13,4 @@ openai
 llama-index
 llama-index-experimental
 bcrypt
+extra-streamlit-components
