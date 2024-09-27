@@ -661,7 +661,7 @@ if st.session_state.CONNECTED:
 
         # pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
       
-        if st.session_state["username"] in pro_user:
+        if st.session_state["name"] in pro_user:
           is_pro_user=True
           chat_msg = 'Ask questions regarding your query(Pro version)'
         else:
