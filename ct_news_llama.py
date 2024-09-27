@@ -22,7 +22,7 @@ from st_btn_group import st_btn_group
 from streamlit_feedback import streamlit_feedback
 import yaml
 from yaml.loader import SafeLoader
-import .streamlit_authenticator as stauth
+import streamlit_authenticator as stauth
 from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           ForgotError,
                                                           LoginError,
