@@ -117,8 +117,9 @@ def show_authentication_ui():
         
         if st.session_state.get("authentication_status"):
             authenticator.logout()
-            st.write(f'Welcome *{st.session_state["name"]}*')
-            st.rerun()
+            # st.write(f'Welcome *{st.session_state["name"]}*')
+          st.write(f'Welcome *{st.session_state["usernames"]["User_ID"]}*')
+            # st.rerun()
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
         elif st.session_state.get("authentication_status") is None:
@@ -153,7 +154,7 @@ def show_authentication_ui():
             if username_of_forgotten_password:
                 # Update MongoDB with the new password
                 # new_password = Hasher._hash(st.session_state['new_password'])
-                new_password = st.session_state['new_password']
+                new_password = Hasher._hash(st.session_state['new_password'])
                 update_user_in_mongo(st.session_state["username"], {"password": new_password})
                 st.success('New password sent securely')
                 # Ensure the random password is transferred to the user securely
