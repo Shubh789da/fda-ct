@@ -118,7 +118,7 @@ def show_authentication_ui():
         if st.session_state.get("authentication_status"):
             authenticator.logout()
             # st.write(f'Welcome *{st.session_state["name"]}*')
-          st.write(f'Welcome *{st.session_state["usernames"]["User_ID"]}*')
+              st.write(f'Welcome *{st.session_state["usernames"]["User_ID"]}*')
             # st.rerun()
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
