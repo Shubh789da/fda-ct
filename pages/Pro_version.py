@@ -657,7 +657,7 @@ if st.session_state.CONNECTED:
         pro_user_ids = collection_user.find({"pro_user": True}, {"_id": 0, "name": 1})
         
         # Convert the cursor into a list of user IDs
-        pro_user = [user['User_ID'] for user in pro_user_ids]
+        pro_user = [user['name'] for user in pro_user_ids]
 
         # pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
       
