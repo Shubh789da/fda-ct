@@ -24,7 +24,10 @@ from streamlit_authenticator.utilities.exceptions import (CredentialsError,
                                                           LoginError,
                                                           RegisterError,
                                                           ResetError,
-                                                          UpdateError) 
+                                                          UpdateError)
+from streamlit_authenticator.utilities.hasher import Hasher
+from streamlit_authenticator.utilities.helpers import Helpers
+from streamlit_authenticator.utilities.validator import Validator
 from clinical_trials_module import get_clinical_trials_data
 from collections import Counter
 from llama_index.core.query_pipeline import (
