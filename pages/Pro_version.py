@@ -654,14 +654,14 @@ if st.session_state.CONNECTED:
                     key=feedback_key,
                 )
         # Query to get all users where pro_user is True and return only the userid field
-        pro_user_ids = collection_user.find({"pro_user": True}, {"_id": 0, "name": 1})
+        pro_user_ids = collection_user.find({"pro_user": True}, {"_id": 0, "User_ID": 1})
         
         # Convert the cursor into a list of user IDs
-        pro_user = [user['name'] for user in pro_user_ids]
+        pro_user = [user['User_ID'] for user in pro_user_ids]
 
         # pro_user=['Ashok Kumar Chenda','Shubh07','shubh']
       
-        if st.session_state["name"] in pro_user:
+        if st.session_state["username"] in pro_user:
           is_pro_user=True
           chat_msg = 'Ask questions regarding your query(Pro version)'
         else:
