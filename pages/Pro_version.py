@@ -41,6 +41,7 @@ from llama_index.experimental.query_engine.pandas import (
 from llama_index.llms.openai import OpenAI
 from llama_index.core import PromptTemplate
 import numpy as np
+import io
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
@@ -419,8 +420,11 @@ if st.session_state.CONNECTED:
     # Apply to all columns
     df = df_genai.copy()
     with st.container():
+      buffer = io.StringIO()
+      df.info(buf=buffer)
+      check = buffer.getvalue()
       st.write("check")
-      st.dataframe(df.head(10))
+      
 
     for col in df.columns:
         if pd.api.types.is_integer_dtype(df[col]):
