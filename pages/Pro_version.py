@@ -418,6 +418,7 @@ if st.session_state.CONNECTED:
     
     # Apply to all columns
     df = df_genai.copy()
+    dataExploration.write(df.info())
 
     for col in df.columns:
         if pd.api.types.is_integer_dtype(df[col]):
@@ -596,7 +597,7 @@ if st.session_state.CONNECTED:
     
         
         feedback_counter = len(st.session_state["feedbacks"])  # Start from where we left off
-        dataExploration.write(df.info())
+        
     
         for n, msg in enumerate(st.session_state.messages):
             st.chat_message(msg["role"]).write(msg["content"])
