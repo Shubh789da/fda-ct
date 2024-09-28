@@ -596,6 +596,7 @@ if st.session_state.CONNECTED:
     
         
         feedback_counter = len(st.session_state["feedbacks"])  # Start from where we left off
+        st.write(df.info())
     
         for n, msg in enumerate(st.session_state.messages):
             st.chat_message(msg["role"]).write(msg["content"])
