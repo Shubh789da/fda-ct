@@ -423,7 +423,7 @@ if st.session_state.CONNECTED:
       buffer = io.StringIO()
       df.info(buf=buffer)
       check = buffer.getvalue()
-      st.write("check")
+      st.write(check)
       
 
     for col in df.columns:
