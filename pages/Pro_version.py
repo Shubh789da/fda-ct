@@ -419,7 +419,8 @@ if st.session_state.CONNECTED:
     # Apply to all columns
     df = df_genai.copy()
     with st.container():
-      st.write(df.info())
+      st.write("check")
+      st.markdown(df.info())
 
     for col in df.columns:
         if pd.api.types.is_integer_dtype(df[col]):
