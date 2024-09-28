@@ -418,7 +418,8 @@ if st.session_state.CONNECTED:
     
     # Apply to all columns
     df = df_genai.copy()
-    dataExploration.write(df.info())
+    with st.container():
+      st.write(df.info())
 
     for col in df.columns:
         if pd.api.types.is_integer_dtype(df[col]):
