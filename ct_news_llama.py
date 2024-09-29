@@ -43,7 +43,7 @@ st.set_page_config(page_title="CT Analysis", page_icon="💭",layout='wide', ini
 st.title('CT Analysis')
 
 #Setup mongoDB authentication
-uri_mdb = "mongodb+srv://postlytllp:HGlyKh6SQfpqlejf@postlyt-test.l88dp2e.mongodb.net/?retryWrites=true&w=majority&appName=postlyt-test"
+uri_mdb = MDB
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
 db = client['test1']
 collection_user = db['user_details']
@@ -504,12 +504,12 @@ if st.session_state.CONNECTED:
 
 
         pai.clear_cache()
-        # llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        # llm = ChatGroq(model_name='llama3-70b-8192', api_key=llama_KEY)
         # llm = OpenAI(
         #               organization:'org-7VsS9klsOkUjb3FkcvQzxn2l',
         #               project:'proj_9RDJQE1vAIuNz2fIPeF5cho8',
         #               model: "gpt-3.5-turbo-0125",
-        #               OPENAI_API_KEY: 'sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h'
+        #               OPENAI_API_KEY: OpenAI_KEY
         #             )
 
         field_descriptions = {
@@ -536,7 +536,7 @@ if st.session_state.CONNECTED:
                             }
 
       
-        llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        llm = ChatGroq(model_name='llama3-70b-8192', api_key=llama_KEY)
         # config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
         connector = PandasConnector({"original_df": df_1}, field_descriptions=field_descriptions)
         config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
