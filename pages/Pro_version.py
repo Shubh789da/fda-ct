@@ -60,7 +60,7 @@ with open('config.yaml', 'r', encoding='utf-8') as file:
 # )
 
 #Setup mongoDB authentication
-uri_mdb = "mongodb+srv://postlytllp:HGlyKh6SQfpqlejf@postlyt-test.l88dp2e.mongodb.net/?retryWrites=true&w=majority&appName=postlyt-test"
+uri_mdb = st.secrets["MDB"]
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
 db = client['test1']
 collection_user = db['user_details']
@@ -557,7 +557,7 @@ if st.session_state.CONNECTED:
         )
         pandas_output_parser = PandasInstructionParser(df)
         response_synthesis_prompt = PromptTemplate(response_synthesis_prompt_str)
-        llm = OpenAI(api_key=OpenAI_KEY, model="gpt-4o")
+        llm = OpenAI(api_key=st.secrets["OpenAI_KEY"], model="gpt-4o")
 
         qp = QP(
             modules={
