@@ -557,7 +557,7 @@ if st.session_state.CONNECTED:
         )
         pandas_output_parser = PandasInstructionParser(df)
         response_synthesis_prompt = PromptTemplate(response_synthesis_prompt_str)
-        llm = OpenAI(api_key= OpenAI_KEY,model="gpt-4o")
+        llm = OpenAI(api_key=OpenAI_KEY, model="gpt-4o")
 
         qp = QP(
             modules={
