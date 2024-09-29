@@ -557,8 +557,7 @@ if st.session_state.CONNECTED:
         )
         pandas_output_parser = PandasInstructionParser(df)
         response_synthesis_prompt = PromptTemplate(response_synthesis_prompt_str)
-        llm = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="gpt-4o")
-        # llm_code = OpenAI(api_key="sk-proj-XKudWYOe0DrzebixiEhST3BlbkFJTrpK0LkXbBkIOzN2Zq1h",model="o1-preview")
+        llm = OpenAI(api_key= OpenAI_KEY,model="gpt-4o")
 
         qp = QP(
             modules={
@@ -588,7 +587,7 @@ if st.session_state.CONNECTED:
         # add link from response synthesis prompt to llm2
         qp.add_link("response_synthesis_prompt", "llm2")
       
-        # llm = ChatGroq(model_name='llama3-70b-8192', api_key="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")
+        # llm = ChatGroq(model_name='llama3-70b-8192', api_key=llama_KEY)
         # # config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
         # connector = PandasConnector({"original_df": df}, field_descriptions=field_descriptions)
         # config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df})
