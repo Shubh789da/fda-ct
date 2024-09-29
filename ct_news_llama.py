@@ -536,7 +536,7 @@ if st.session_state.CONNECTED:
                             }
 
       
-        llm = ChatGroq(model_name='llama3-70b-8192', api_key=llama_KEY)
+        llm = ChatGroq(model_name='llama3-70b-8192', api_key=st.secrets["llama_KEY"])
         # config_llm=({'llm': llm,'llm_options':{'model':'gpt-4o'},'response_parse': StreamlitResponse,'verbose':True,'max_retries':5})
         connector = PandasConnector({"original_df": df_1}, field_descriptions=field_descriptions)
         config_llm=({'llm': llm, 'llm_options':{'model':'gpt-4o'},'verbose': True,'response_parse': StreamlitResponse,"original_df": df_1})
