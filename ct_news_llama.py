@@ -43,7 +43,7 @@ st.set_page_config(page_title="CT Analysis", page_icon="💭",layout='wide', ini
 st.title('CT Analysis')
 
 #Setup mongoDB authentication
-uri_mdb = MDB
+uri_mdb = st.secrets["MDB"]
 client = MongoClient(uri_mdb, server_api=ServerApi('1'))
 db = client['test1']
 collection_user = db['user_details']
@@ -504,7 +504,7 @@ if st.session_state.CONNECTED:
 
 
         pai.clear_cache()
-        # llm = ChatGroq(model_name='llama3-70b-8192', api_key=llama_KEY)
+        # llm = ChatGroq(model_name='llama3-70b-8192', api_key=st.secrets["llama_KEY"])
         # llm = OpenAI(
         #               organization:'org-7VsS9klsOkUjb3FkcvQzxn2l',
         #               project:'proj_9RDJQE1vAIuNz2fIPeF5cho8',
