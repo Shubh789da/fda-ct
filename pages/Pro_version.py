@@ -122,7 +122,7 @@ def show_authentication_ui():
         elif st.session_state.get("authentication_status") is False:
             st.error('Username/password is incorrect')
         elif st.session_state.get("authentication_status") is None:
-            st.warning('Please Login to use GenAI for data analysis')
+            st.warning('Please use Alphanumeric password with one letter in caps and special characters e.g Apple@123')
 
     with tab2:
         # Creating a new user registration widget
