@@ -131,7 +131,8 @@ def show_authentication_ui():
                 # st.rerun()
         except RegisterError as e:
             st.error(e)
-    
+        st.warning('Please use Alphanumeric password with one letter in caps and special characters e.g Apple@123')
+      
     with tab3:
         # Creating a forgot password widget
         try:
